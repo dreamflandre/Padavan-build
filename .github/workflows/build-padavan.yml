@@ -26,13 +26,17 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        curl -k --data chat_id="${{ secrets.CHAT_ID }}" --data "text=老毛子固件开始编译" "${{ secrets.TELEGRAM }}"
         sudo apt-get update
         sudo apt-get -y install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot \
         cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
         pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget
     - name: Clone source code
       run: |
+        #chongsheng
         git clone --depth=1 https://github.com/chongshengB/rt-n56u.git /opt/rt-n56u
+        #可行
+        #git clone --depth=1 https://github.com/TurBoTse/rt-n56u.git /opt/rt-n56u
         cd /opt/rt-n56u/toolchain-mipsel
         sh dl_toolchain.sh
         mkdir -p /opt/images/
@@ -98,6 +102,7 @@ jobs:
         sudo ./clear_tree
         sudo ./build_firmware_modify $TNAME 0
         sudo mv -f images/*.trx /opt/images/
+        curl -k --data chat_id="${{ secrets.CHAT_ID }}" --data "text=老毛子固件编译完成" "${{ secrets.TELEGRAM }}"
     - name : Upload packages
       uses: actions/upload-artifact@master
       if: always()
